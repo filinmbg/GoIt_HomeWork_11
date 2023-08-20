@@ -51,13 +51,18 @@ class AdressBook(UserDict):
             self.data.pop(key)
             return record
            
-    def iterator(self, n=None):
-        index = 0
-        n = len(self.data) if not n else n
-        while index < len(self.data):
-            yield list(self.data)[index: index + n]
-            index += n
-        
+    def iterator(self, n):
+        self.n = n
+        self.count = 0
+        return self
+
+    def __next__(self):
+        self.count += 1
+        if self.count > self.n:
+            raise StopIteration
+        else:
+            for i in self.data:
+                yield self.data[i]
 
 class Birthday(Field):
     def __init__(self, value):
@@ -202,6 +207,7 @@ COMMANDS = {
     change_handler: ["change"],
     show_phone_handler: ["phone"],
     show_all_handler: ["show all"],
+    Birthday: ["birthday"],
 }
 
 
